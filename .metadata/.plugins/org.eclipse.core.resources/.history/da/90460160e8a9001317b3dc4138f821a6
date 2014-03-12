@@ -1,0 +1,38 @@
+import java.util.Random;
+
+
+public class RandomGen {
+
+	private Random r = new Random();
+
+	public RSABigInteger getRandExp(){
+		
+		int p, q;
+		
+		p= r.nextInt();
+		q= r.nextInt();
+		
+		System.out.println(p + " " + q);
+		
+		return null;
+	}
+	
+	public RSABigInteger genRandInput(int size){
+		
+		byte[] buffer = new byte[size];
+		RSABigInteger result;
+		
+		r.nextBytes(buffer);
+		result=new RSABigInteger(buffer);
+		
+		return result;
+	}
+	
+	public void printPrimes(){
+		
+		int pos = 0;
+		
+		for(; pos < MAX_SIZE; pos++)
+			System.out.println(primes[pos]+"|");
+	}
+}

@@ -1,0 +1,12 @@
+public class RSATestSuite {
+
+	
+	public static void main(String[] args){
+
+			RSABigInteger big = new RSABigInteger("2");
+			
+			System.out.println(big.pow(3));
+	
+	}
+	
+}

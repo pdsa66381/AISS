@@ -1,0 +1,11 @@
+public class RSATestSuite {
+	
+	public static void main(String[] args){
+
+		RandomGen r = new RandomGen();
+		
+		r.genRandInput();
+		
+	
+	}
+}

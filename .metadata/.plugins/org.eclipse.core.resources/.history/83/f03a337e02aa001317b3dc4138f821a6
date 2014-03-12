@@ -1,0 +1,55 @@
+import java.math.BigInteger;
+import java.util.Random;
+
+
+public class RandomGen {
+
+	private Random r = new Random();
+
+	public RSABigInteger getRandExp(){
+		
+		int p, q;
+		
+		do{
+			p= r.nextInt();
+		}while(p < 0);
+		
+		do{
+			q= r.nextInt();
+		}while(q < 0);
+		
+		
+		System.out.println(p + " " + q);
+		
+		return null;
+	}
+
+	public RSABigInteger getRandExp(int numBits){
+		BigInteger 	p = new BigInteger(numBits, 15, new Random()),
+					q = new BigInteger(numBits, 15, new Random()),
+					n,
+					phiN;
+		
+		RSABigInteger e;
+		
+		n = p.multiply(q);
+		phiN = p.subtract(BigInteger.ONE);
+		phiN = phiN.multiply(q.subtract(BigInteger.ONE));
+		
+		do{
+			e = new RSABigInteger(2*numBits, new Random());
+		}
+	}
+	
+	
+	public RSABigInteger genRandInput(int size){
+		
+		byte[] buffer = new byte[size];
+		RSABigInteger result;
+		
+		r.nextBytes(buffer);
+		result=new RSABigInteger(buffer);
+		
+		return result;
+	}
+}

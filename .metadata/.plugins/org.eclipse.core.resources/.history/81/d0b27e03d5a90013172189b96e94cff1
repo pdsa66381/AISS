@@ -1,0 +1,25 @@
+import java.math.BigInteger;
+
+public class RSABigInteger extends BigInteger{
+
+	private static final long serialVersionUID = 1L;
+
+	private PowerStrategy strategy = new SimplePower();
+	
+	public RSABigInteger(String val, int radix) {
+		super(val, radix);
+	}
+	
+	@Override
+	public BigInteger modPow(BigInteger e, BigInteger n){
+		
+		BigInteger result;
+		
+		return n;
+	}
+	
+	
+	public void modifyPowerStategy(PowerStrategy strategy){
+		this.strategy = strategy;
+	}
+}

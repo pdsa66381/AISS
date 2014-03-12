@@ -1,0 +1,15 @@
+import java.util.Random;
+
+
+public class RandomGen {
+
+	public int genRand(int size){
+		byte[] result = byte[size];
+		
+		Random r = new Random();
+		r.nextBytes(result);
+		
+		return 0;
+	}
+	
+}

@@ -1,0 +1,19 @@
+import java.math.BigInteger;
+
+
+public class SimplePower implements PowerStrategy {
+
+	@Override
+	public BigInteger pow(BigInteger x, BigInteger e) {
+		
+		BigInteger result = BigInteger.ZERO;
+		
+		while(e.intValue()>1){
+			result = x.multiply(result);
+			e= e.subtract(BigInteger.ONE);
+		}
+		
+		return null;
+	}
+
+}

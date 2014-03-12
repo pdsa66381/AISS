@@ -1,0 +1,25 @@
+import java.math.BigInteger;
+import java.util.Random;
+
+public class RandomGen {
+	
+	public RSABigInteger genRandInput(int size){
+		
+		byte[] array = new byte[size];
+		RSABigInteger result;
+		Random r = new Random();
+		
+		do{
+			r.nextBytes(array);
+			result=new BigInteger(array);
+		
+		}while(b.doubleValue() < 0
+				&& (b.doubleValue() < Math.pow(2, 32)
+						|| b.doubleValue() > Math.pow(2, 1024)));
+		
+		System.out.println(b);
+		
+		return 0;
+	}
+	
+}

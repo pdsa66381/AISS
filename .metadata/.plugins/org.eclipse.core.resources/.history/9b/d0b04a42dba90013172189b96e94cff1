@@ -1,0 +1,16 @@
+import java.math.BigInteger;
+
+
+public class DefaultStrategy implements PowerStrategy{
+
+	@Override
+	public BigInteger pow(BigInteger x, BigInteger e) {
+		return x.pow(e.intValue());
+	}
+
+	@Override
+	public BigInteger pow(BigInteger x, int e) {
+		 return x.pow(e);
+	}
+
+}

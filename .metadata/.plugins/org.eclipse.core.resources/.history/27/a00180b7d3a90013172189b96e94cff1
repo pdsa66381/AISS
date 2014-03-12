@@ -1,0 +1,15 @@
+import java.math.BigInteger;
+
+public class RSABigInteger extends BigInteger{
+
+	private static final long serialVersionUID = 1L;
+
+	public RSABigInteger(String val, int radix) {
+		super(val, radix);
+	}
+	
+	@Override
+	public BigInteger modPow(BigInteger e, BigInteger n){
+		
+	}
+}

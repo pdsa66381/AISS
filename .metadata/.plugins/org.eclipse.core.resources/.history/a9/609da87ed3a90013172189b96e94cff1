@@ -1,0 +1,9 @@
+import java.math.BigInteger;
+
+public class RSABigInteger extends BigInteger{
+
+	public RSABigInteger(String val, int radix) {
+		super(val, radix);
+	}
+
+}

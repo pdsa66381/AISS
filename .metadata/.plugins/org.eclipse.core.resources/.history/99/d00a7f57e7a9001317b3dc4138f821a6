@@ -1,0 +1,39 @@
+import java.util.Random;
+
+
+public class RandomGen {
+
+	
+	private final int MAX_SIZE = 1000;
+	private int[] primes = new int[MAX_SIZE];
+	
+	public RandomGen(){
+		
+		int pos = 0,
+			n = 0;
+
+		//Fill primes bucket
+		while(pos < MAX_SIZE){
+			if (n%2==0) return false;
+		    //if not, then just check the odds
+		    for(int i=3;i*i<=n; i+=2) {
+		        if(n%i==0)
+		            return false;
+		    }
+		    primes[pos]=n;
+		}
+	}
+	
+	public RSABigInteger genRandInput(int size){
+		
+		byte[] buffer = new byte[size];
+		RSABigInteger result;
+		Random r = new Random();
+		
+		r.nextBytes(buffer);
+		result=new RSABigInteger(buffer);
+		
+		return result;
+	}
+	
+}

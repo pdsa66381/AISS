@@ -1,0 +1,17 @@
+import java.math.BigInteger;
+
+
+public class SquarePow implements PowerStrategy{
+
+	@Override
+	public BigInteger pow(BigInteger x, BigInteger e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public BigInteger pow(BigInteger x, int e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}

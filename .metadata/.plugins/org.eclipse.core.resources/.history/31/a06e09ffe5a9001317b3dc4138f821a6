@@ -1,0 +1,17 @@
+import java.util.Random;
+
+public class RandomGen {
+	
+	public RSABigInteger genRandInput(int size){
+		
+		RSABigInteger result;
+		Random r = new Random();
+		
+		r.nextBytes(buffer);
+		buffer[0]=0;
+		result=new RSABigInteger(buffer);
+		
+		return result;
+	}
+	
+}
