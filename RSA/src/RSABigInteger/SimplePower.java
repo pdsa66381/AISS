@@ -1,4 +1,5 @@
 package RSABigInteger;
+
 import java.math.BigInteger;
 
 
@@ -9,12 +10,13 @@ public class SimplePower implements PowerStrategy {
 	 */
 	@Override
 	public BigInteger pow(BigInteger x, BigInteger e) {
+					
+		System.out.println("Using SimplePower...");
 		
 		BigInteger result = BigInteger.ONE;
-		
-		while(e.intValue()>0){
+		while(e.doubleValue()>0){
 			result = x.multiply(result);
-			e= e.subtract(BigInteger.ONE);
+			e=e.subtract(BigInteger.ONE);	
 		}
 		
 		return result;
@@ -27,9 +29,9 @@ public class SimplePower implements PowerStrategy {
 		
 		while(e>0){
 			result = x.multiply(result);
-			e--;
+			e--;	
 		}
-
+		
 		return result;
 	}
 
