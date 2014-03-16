@@ -1,0 +1,3 @@
+For example, in RSA blinding involves computing the blinding operation E(x) = xre mod N, where r is a random integer between 1 and N and relatively prime to N (i.e. gcd(r, N) = 1), x is the ciphertext, e is the public RSA exponent and N is the RSA modulus. As usual, the decryption function f(z) = zd mod N is applied thus giving f(E(x)) = xdred mod N = xdr mod N. Finally it is unblinded using the function D(z) = zr−1 mod N. Since D(f(E(x))) = xd mod N, this is indeed an RSA decryption.
+
+https://en.wikipedia.org/wiki/Blinding_(cryptography)29
