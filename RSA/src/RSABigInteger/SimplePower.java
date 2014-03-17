@@ -35,4 +35,10 @@ public class SimplePower implements PowerStrategy {
 		return result;
 	}
 
+	@Override
+	public BigInteger modPow(BigInteger x, BigInteger e, BigInteger n) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
