@@ -38,4 +38,5 @@ public class RSABigInteger extends BigInteger{
 	public void modifyPowerStategy(PowerStrategy strategy){
 		this.strategy = strategy;
 	}
+	
 }
