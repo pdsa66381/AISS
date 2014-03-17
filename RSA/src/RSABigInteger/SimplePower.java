@@ -11,8 +11,6 @@ public class SimplePower implements PowerStrategy {
 	@Override
 	public BigInteger pow(BigInteger x, BigInteger e) {
 					
-		System.out.println("Using SimplePower...");
-		
 		BigInteger result = BigInteger.ONE;
 		while(e.doubleValue()>0){
 			result = x.multiply(result);
@@ -37,8 +35,15 @@ public class SimplePower implements PowerStrategy {
 
 	@Override
 	public BigInteger modPow(BigInteger x, BigInteger e, BigInteger n) {
-		// TODO Auto-generated method stub
-		return null;
+
+		BigInteger result = BigInteger.ONE;
+		
+		while(e.doubleValue()>0){
+			result = x.multiply(result);
+			e=e.subtract(BigInteger.ONE);	
+		}
+		
+		return result.mod(n);	
 	}
 
 }

@@ -12,11 +12,8 @@ public class NanoStopWatch {
 	
 	public double stopClock(){
 		
-		if(this.start_time>0){
-			this.elapsed_time = System.nanoTime() - this.start_time;
-			this.start_time = 0;
-			return this.elapsed_time;
-		}else
-			return -1;
+		this.elapsed_time = System.nanoTime() - this.start_time;
+		this.start_time = 0;
+		return this.elapsed_time;
 	}
 }

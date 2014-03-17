@@ -6,7 +6,7 @@ public class RSABigInteger extends BigInteger{
 
 	private static final long serialVersionUID = 1L;
 
-	private PowerStrategy strategy = new SquarePow();
+	private PowerStrategy strategy = new SimplePower();
 	
 	public RSABigInteger(String val) {
 		super(val);
