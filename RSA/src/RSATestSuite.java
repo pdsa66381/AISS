@@ -1,12 +1,15 @@
 import java.math.BigInteger;
 import java.util.Random;
 
+import utils.NanoStopWatch;
+import RSA.RSA;
 import RSABigInteger.RSABigInteger;
 import RSABigInteger.SimplePower;
 import RSABigInteger.SquarePow;
 
 public class RSATestSuite {
 	
+
 	
 	public String performTest1(int key_size, int input_size){
 		
@@ -14,7 +17,7 @@ public class RSATestSuite {
 		NanoStopWatch timer = new NanoStopWatch();
 		double[] results = new double[10];
 		int i;
-		double 	sum = 0,
+		double sum = 0,
 				average;
 		
 		BigInteger input = new BigInteger(input_size, new Random());
@@ -36,7 +39,6 @@ public class RSATestSuite {
 		
 		//Test for RSABigInteger with SimplePower
 		RSABigInteger simplePower = new RSABigInteger(input.toString());
-		sum=0;
 		simplePower.modifyPowerStategy(new SimplePower());
 		
 		for(i=0; i < results.length; i++){
@@ -54,7 +56,7 @@ public class RSATestSuite {
 		//Test for RSABigInteger with SimplePower
 		RSABigInteger squarePower = new RSABigInteger(input.toString());
 		simplePower.modifyPowerStategy(new SquarePow());
-		sum=0;
+		
 		for(i=0; i < results.length; i++){
 			timer.startClock();
 			rsa.encrypt(squarePower);
@@ -94,8 +96,5 @@ public class RSATestSuite {
 		
 		testSuite.performTest1(4, 32);
 		testSuite.performTest1(8, 32);
-		testSuite.performTest1(16, 32);
-		testSuite.performTest1(24, 32);
-		testSuite.performTest1(32, 32);
 	}
 }
