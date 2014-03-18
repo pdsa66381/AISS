@@ -1,8 +1,7 @@
 import java.math.BigInteger;
 import java.util.Random;
 
-import utils.NanoStopWatch;
-import RSA.RSA;
+
 import RSABigInteger.RSABigInteger;
 import RSABigInteger.SimplePower;
 import RSABigInteger.SquarePow;
@@ -68,8 +67,31 @@ public class RSATestSuite {
 		average = sum/results.length;
 		
 		System.out.println("SquarePower: \t"+average+" ns");
-		System.out.println("--------------------------");	
+		System.out.println("--------------------------");
+		
+		//Test for RSABigInteger with Blinding
+		blindTest(key_size, input);
 		return null;
+	}
+	
+	public void blindTest(int size, BigInteger msg){
+		RSARandomGen keys = new RSARandomGen();
+		keys.RSAGen(size);
+		BigInteger n = keys.getModulus();
+		BigInteger exp = keys.getPrivateKey();
+		BigInteger e = keys.obtainLargeE();
+		BigInteger r =  new BigInteger(size, new Random());
+		BigInteger blindValue;
+		BigInteger Y;
+
+		blindValue = r.modPow(e, n);
+		blindValue=msg.multiply(blindValue);
+		System.out.println("blindValue:" + blindValue);
+		Y=blindValue.modPow(exp, n);
+		System.out.println("Y:" + Y);
+		BigInteger fin = Y.divide(r);
+		System.out.println("fin:" + fin.modPow(BigInteger.ONE, n));
+		System.out.println("compare:" + msg.modPow(exp, n));
 	}
 	
 	public static void main(String[] args){

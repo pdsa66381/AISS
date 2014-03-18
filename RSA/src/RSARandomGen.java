@@ -60,4 +60,15 @@ public class RSARandomGen {
 		
 		return s;
 	}
+
+	public BigInteger obtainLargeE(){
+		//BigInteger e = new BigInteger(16, new Random());
+		BigInteger e = new BigInteger("65537");
+		//System.out.println("valor obtido:" + e);
+		return e;
+	}
+	
+	public BigInteger getPrivateKey(){
+		return this.privateKey;
+	}
 }
