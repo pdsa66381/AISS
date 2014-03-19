@@ -171,7 +171,50 @@ public class RSATestSuite {
 		
 	}
 	
-	
+	/**
+	 * 
+	 * @param input
+	 * @param file_title
+	 * @param battery_size
+	 */
+	public void performTest2(BigInteger input, String file_title, int battery_size){
+		
+		int i, size;
+		RSA rsa;
+		double[] results = new double[4];
+		
+		String output = "";
+		output += "Performing test2 with battery of "+battery_size+" samples...\n";
+		output += "[Input]: \t"+input.toString()+ "of size" + input.bitLength()+"\n";
+		
+		//
+		RSABigInteger iterative = new RSABigInteger(input.toString());
+		RSABigInteger squarepow = new RSABigInteger(input.toString());
+		RSABigInteger blinding 	= new RSABigInteger(input.toString());
+		
+		squarepow.modifyPowerStategy(new SquarePow());
+		//TODO enable blinding
+		
+		//TODO enable 32b size
+		for(i=0, size=0; size< 32; size+=size, i++){
+			rsa = new RSA(size);
+			output += ""+i+") Testing all versions with key"+rsa.getPublicKey();
+			output += " of size"+rsa.getPublicKey().bitLength()+"\n";
+			System.err.println(rsa.getPublicKey().bitLength());
+			results[0] = performUnitTest(rsa, input);
+			results[1] = performUnitTest(rsa, iterative);
+			results[2] = performUnitTest(rsa, squarepow);
+			results[3] = performUnitTest(rsa, blinding);
+			
+			output += "Standard: \t"	+results[0]	+"\t ns\n";
+			output += "Iterative: \t"	+results[1]	+"\t ns\n";
+			output += "Square Power: \t"+results[2]	+"\t ns\n";
+			output += "RSA Blinding: \t"+results[3]	+"\t ns\n";
+			output += "----------------------------------\n\n";
+		}
+		
+		ResultsWriter.printResultsToFile(file_title, output);
+	}
 	
 	/**
 	 * Test the execution of the different versions of the RSA execution, with inputs, of size
@@ -202,6 +245,7 @@ public class RSATestSuite {
 		
 		ResultsWriter.printResultsToFile(file_title, output);
 	}
+	
 
 	
 	public void blindTest(int size, BigInteger msg){
@@ -239,13 +283,13 @@ public class RSATestSuite {
 		RSA rsa = new RSA(8);
 		
 		Scanner reader = new Scanner(System.in);
-		int in;
-		
+		int in, key_size, input_size, battery_size;
+		String filename;
 		String user_info = "";
 		
-		user_info += "[1] Perform test 1\n";
-		user_info += "[2] Perform test 1\n";
-		user_info += "[3] Perform test 1\n";
+		user_info += "[1] Perform test 1 - Test with a fixed key, inputs with different size (32bits to 1024)\n";
+		user_info += "[2] Perform test 2 - Test with a fixed input, different sized keys\n";
+		user_info += "[3] Perform test 3 - Test with a fixed key, inputs with different percentages of set bits.\n";
 		user_info += "[0] Exit";
 		
 		while(true){
@@ -257,10 +301,33 @@ public class RSATestSuite {
 			case 0:
 				return;
 			case 1:
+				System.out.println("Key size (bits):");
+				key_size = reader.nextInt();
+				System.out.println("Number of tests:");
+				battery_size = reader.nextInt();
+				System.out.println("Save results as (test1_keysize.out):");
+				filename = reader.next();
+				testSuite.performTest1(new RSA(key_size), filename, battery_size);
 				break;
 			case 2:
+				System.out.println("Input size (bits):");
+				input_size = reader.nextInt();
+				System.out.println("Number of tests:");
+				battery_size = reader.nextInt();
+				System.out.println("Save results as (test2_):");
+				filename = reader.next();
+				testSuite.performTest2(new BigInteger(input_size, new Random()), filename, battery_size);
 				break;
 			case 3:
+				System.out.println("Key size (bits):");
+				key_size = reader.nextInt();
+				System.out.println("Input size (bits):");
+				input_size = reader.nextInt();
+				System.out.println("Number of tests:");
+				battery_size = reader.nextInt();
+				System.out.println("Save results as (test3_):");
+				filename = reader.next();
+				testSuite.performTest3(new RSA(key_size), input_size, filename, battery_size);
 				break;
 			default:
 				break;
