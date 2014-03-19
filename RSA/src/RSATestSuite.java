@@ -1,5 +1,6 @@
 import java.math.BigInteger;
 import java.util.Random;
+import java.util.Scanner;
 
 import utils.NanoStopWatch;
 import utils.ResultsWriter;
@@ -87,6 +88,55 @@ public class RSATestSuite {
 		return results;
 	}
 	
+	public double[] performTestUnitByPercentage(RSA rsa, int input_size, double percentile){
+		
+		Random rnd = new Random();
+		BigInteger 	standard = BigInteger.ZERO,
+					two = new BigInteger("2");
+		int bitCount = (int) (percentile*(input_size));
+		double[] results = new double[4];
+		
+		//Adjust to input_size according to the percentile
+		if(percentile > 0){
+			standard = standard.flipBit(input_size-1);
+			
+			if(percentile == 1)
+				standard = (two.pow(input_size)).subtract(BigInteger.ONE);
+			else{
+				//Add bits until bit count matches the percentile
+				while(standard.bitCount()<bitCount){
+					
+					int index;
+					
+					do{
+						index = rnd.nextInt(input_size-1);
+					}while(standard.testBit(index));
+					
+					standard = standard.flipBit(index);
+				}
+			}
+		}
+		
+		System.err.println("Percentile Required: "+percentile*100+"%");
+		System.err.println("Enabled bits required: "+bitCount+" obtained "+standard.bitCount());
+		System.err.println("Required size: "+input_size+" obtained "+standard.bitLength()+"\n");
+		
+		
+		//Adjust inputs to type
+		RSABigInteger iterative = new RSABigInteger(standard.toString());
+		RSABigInteger squarepow = new RSABigInteger(standard.toString(2));
+		RSABigInteger blinding 	= new RSABigInteger(standard.toString(2));
+		squarepow.modifyPowerStategy(new SquarePow());
+		
+		//Test for each version
+		results[0] = performUnitTest(rsa, standard);
+		results[1] = performUnitTest(rsa, iterative);
+		results[2] = performUnitTest(rsa, squarepow);
+		results[3] = performUnitTest(rsa, blinding);
+		
+		return results;
+		
+	}
 	
 	/**
 	 * Tests the execution of the different versions of the RSA execution, with different sized 
@@ -98,11 +148,14 @@ public class RSATestSuite {
 		
 		BigInteger two = new BigInteger("2");
 		int exp, i;
-		String output = "Performing test1 with battery of "+battery_size+" samples...\n";
+		String output = "";
 		double[] results = new double[4];
 		
+		output += "Performing test1 with battery of "+battery_size+" samples...\n";
+		output += "[PublicKey]: \t"+rsa.getPublicKey()+" of size "+rsa.getPublicKey().bitLength()+"bits\n";
+		
 		for(i=0, exp=5; exp <= 10; exp++, i++){
-			output += ""+i+") Testing all versions with inputs of size "+two.pow(exp).toString()+"\n";
+			output += ""+i+") Testing all versions with fixed with inputs of size "+two.pow(exp).toString()+"\n";
 			results = performTestBatteryFixedKey(rsa, two.pow(exp).intValue(), battery_size);
 			output += "Standard: \t"	+results[0]	+"\t ns\n";
 			output += "Iterative: \t"	+results[1]	+"\t ns\n";
@@ -118,6 +171,38 @@ public class RSATestSuite {
 		
 	}
 	
+	
+	
+	/**
+	 * Test the execution of the different versions of the RSA execution, with inputs, of size
+	 * input_bit_size, with different percentages of bits set to one, in order to study the
+	 * overall pattern exposure.
+	 * @param rsa
+	 * @param input_bit_size
+	 * @param sample_size
+	 */
+	public void performTest3(RSA rsa, int input_bit_size, String file_title, int sample_size){
+		
+		String output="";
+		double[] results;
+		double[] percentiles = {0, 0.2, 0.4, 0.5, 0.6, 0.75, 1.0};
+		
+		output += "Performing test2 with battery of "+sample_size+" samples...\n";
+		output += "[PublicKey]: \t"+rsa.getPublicKey()+" of size "+rsa.getPublicKey().bitLength()+"bits\n";
+		
+		for(int i=0; i < percentiles.length; i++){
+			results = performTestUnitByPercentage(rsa, input_bit_size, percentiles[i]);
+			output += "Testing all versions with "+percentiles[i]*100+"% active bits\n";
+			output += "Standard: \t"	+results[0]	+"\t ns\n";
+			output += "Iterative: \t"	+results[1]	+"\t ns\n";
+			output += "Square Power: \t"+results[2]	+"\t ns\n";
+			output += "RSA Blinding: \t"+results[3]	+"\t ns\n";
+			output += "----------------------------------\n\n";
+		}
+		
+		ResultsWriter.printResultsToFile(file_title, output);
+	}
+
 	
 	public void blindTest(int size, BigInteger msg){
 		RSARandomGen keys = new RSARandomGen();
@@ -152,6 +237,37 @@ public class RSATestSuite {
 		
 		RSATestSuite testSuite = new RSATestSuite(1);
 		RSA rsa = new RSA(8);
-		testSuite.performTest1(rsa, "test1_keysize8", 10);
+		
+		Scanner reader = new Scanner(System.in);
+		int in;
+		
+		String user_info = "";
+		
+		user_info += "[1] Perform test 1\n";
+		user_info += "[2] Perform test 1\n";
+		user_info += "[3] Perform test 1\n";
+		user_info += "[0] Exit";
+		
+		while(true){
+			
+			System.out.println(user_info);
+			in = reader.nextInt();
+			
+			switch (in) {
+			case 0:
+				return;
+			case 1:
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			default:
+				break;
+			}
+		
+		}
+	
 	}
+	
 }

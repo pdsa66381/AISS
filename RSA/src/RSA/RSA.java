@@ -24,5 +24,9 @@ public class RSA {
 	
 	public String printRSA(){
 		return this.rsaRand.toString();
-	}	
+	}
+	
+	public BigInteger getPublicKey(){
+		return this.rsaRand.getPublicKey();
+	}
 }
