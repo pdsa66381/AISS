@@ -6,6 +6,7 @@ import utils.NanoStopWatch;
 import utils.ResultsWriter;
 import RSA.RSA;
 import RSA.RSARandomGen;
+import RSABigInteger.BlindingRSA;
 import RSABigInteger.RSABigInteger;
 import RSABigInteger.SquarePow;
 
@@ -249,32 +250,41 @@ public class RSATestSuite {
 
 	
 	public void blindTest(int size, BigInteger msg){
+		
 		RSARandomGen keys = new RSARandomGen();
-		keys.RSAGen(16);
+		keys.RSAGen(size);
 		BigInteger n = keys.getModulus();
-		BigInteger exp = keys.getPrivateKey();
-		BigInteger e = keys.obtainLargeE();
-		BigInteger r =  new BigInteger(16, new Random());
+		BigInteger e = keys.getPublicKey(); //public key
+		BigInteger d = keys.getPublicKey(); //private key
+		//SecureRandom random = new SecureRandom();
+		BigInteger r;// =  BigInteger.probablePrime(size, random);
 		BigInteger blindValue;
 		BigInteger signature;
 		
-		/*System.out.println("n:" + n);
-		System.out.println("exp:" + exp);
-		System.out.println("e:" + e);
-		System.out.println("r:" + r);*/
+		//A random e exponent is calculated such that 
+				do{
+					r = new RSABigInteger(size, new Random());
+				}while((n.compareTo(r)!=1) || (r.gcd(n).compareTo(BigInteger.ONE)!=0));
 		
-		//blindValue = r.modPow(e, n);
-		//blindValue =msg.multiply(blindValue);
-		blindValue= ((r.modPow(e,n)).multiply(msg)).mod(n);
+		System.out.println("n:" + n);
+		System.out.println("r:" + r);
+		System.out.println("gcd: " + r.gcd(n));
+		
+		blindValue = r.modPow(e, n);
+		blindValue =msg.multiply(blindValue);
 		System.out.println("blindValue:" + blindValue);
-		signature=blindValue.modPow(exp, n);
+		
+		signature=blindValue.modPow(d, n);
 		System.out.println("Signature:" + signature);
 		
-		BigInteger s = r.modInverse(n).multiply(signature).mod(n);
-		System.out.println("teste:" + s);
-		System.out.println(s.modPow(e,n));
 		
-		System.out.println("mod pow:" + msg.modPow(exp, n));
+		//BigInteger s = r.modInverse(n).multiply(signature).mod(n);
+		BigInteger s = signature.multiply(r.modInverse(n));
+		s=s.mod(n);
+		System.out.println("teste:" + s);
+		
+		System.out.println("mod pow:" + msg.modPow(e, n));
+
 	}
 	
 	public static void main(String[] args){
@@ -291,6 +301,8 @@ public class RSATestSuite {
 		user_info += "[2] Perform test 2 - Test with a fixed input, different sized keys\n";
 		user_info += "[3] Perform test 3 - Test with a fixed key, inputs with different percentages of set bits.\n";
 		user_info += "[0] Exit";
+		
+		testSuite.blindTest(8, new BigInteger("30"));
 		
 		while(true){
 			
