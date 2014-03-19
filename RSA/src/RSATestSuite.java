@@ -76,22 +76,31 @@ public class RSATestSuite {
 	
 	public void blindTest(int size, BigInteger msg){
 		RSARandomGen keys = new RSARandomGen();
-		keys.RSAGen(size);
+		keys.RSAGen(16);
 		BigInteger n = keys.getModulus();
 		BigInteger exp = keys.getPrivateKey();
 		BigInteger e = keys.obtainLargeE();
-		BigInteger r =  new BigInteger(size, new Random());
+		BigInteger r =  new BigInteger(16, new Random());
 		BigInteger blindValue;
-		BigInteger Y;
-
-		blindValue = r.modPow(e, n);
-		blindValue=msg.multiply(blindValue);
+		BigInteger signature;
+		
+		/*System.out.println("n:" + n);
+		System.out.println("exp:" + exp);
+		System.out.println("e:" + e);
+		System.out.println("r:" + r);*/
+		
+		//blindValue = r.modPow(e, n);
+		//blindValue =msg.multiply(blindValue);
+		blindValue= ((r.modPow(e,n)).multiply(msg)).mod(n);
 		System.out.println("blindValue:" + blindValue);
-		Y=blindValue.modPow(exp, n);
-		System.out.println("Y:" + Y);
-		BigInteger fin = Y.divide(r);
-		System.out.println("fin:" + fin.modPow(BigInteger.ONE, n));
-		System.out.println("compare:" + msg.modPow(exp, n));
+		signature=blindValue.modPow(exp, n);
+		System.out.println("Signature:" + signature);
+		
+		BigInteger s = r.modInverse(n).multiply(signature).mod(n);
+		System.out.println("teste:" + s);
+		System.out.println(s.modPow(e,n));
+		
+		System.out.println("mod pow:" + msg.modPow(exp, n));
 	}
 	
 	public static void main(String[] args){
