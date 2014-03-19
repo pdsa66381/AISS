@@ -18,7 +18,6 @@ public class SquarePow implements PowerStrategy{
 
 	@Override
 	public BigInteger modPow(BigInteger x, BigInteger e, BigInteger n) {
-		System.out.println("Using power square:");
 		BigInteger y = BigInteger.ONE;
 		char arr[] = e.toString(2).toCharArray();
 		int i;
