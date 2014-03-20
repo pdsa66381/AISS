@@ -255,7 +255,8 @@ public class RSATestSuite {
 		keys.RSAGen(size);
 		BigInteger n = keys.getModulus();
 		BigInteger e = keys.getPublicKey(); //public key
-		BigInteger d = keys.getPublicKey(); //private key
+		BigInteger d = keys.getPrivateKey(); //private key
+		//BigInteger d = keys.getMultiInverse();
 		//SecureRandom random = new SecureRandom();
 		BigInteger r;// =  BigInteger.probablePrime(size, random);
 		BigInteger blindValue;
@@ -266,24 +267,42 @@ public class RSATestSuite {
 					r = new RSABigInteger(size, new Random());
 				}while((n.compareTo(r)!=1) || (r.gcd(n).compareTo(BigInteger.ONE)!=0));
 		
-		System.out.println("n:" + n);
+		
+		d=keys.generateOtherPrivateKey(size, msg);
+		/*System.out.println("e:" + e);
 		System.out.println("r:" + r);
-		System.out.println("gcd: " + r.gcd(n));
+		System.out.println("gcd:" + r.gcd(n));
+		System.out.println("d:" + d);
+		System.out.println("n:" + n);*/
+		System.out.println("testar: " + msg.modPow(e.multiply(d), n));
+		System.out.println("msg: " + msg.mod(n));
 		
-		blindValue = r.modPow(e, n);
-		blindValue =msg.multiply(blindValue);
+		//blindValue = r.modPow(e, n);
+		//blindValue =msg.multiply(blindValue);
+		//System.out.println("blindValue:" + blindValue);
+		BigInteger otherBlind = (r.pow(e.intValue())).multiply(msg);
+		System.out.println("other blindValue:" + otherBlind);
+		
+		//signature=blindValue.modPow(d, n);
+		//System.out.println("Signature:" + signature);
+		
+		BigInteger otherSign = otherBlind.modPow(d, n);
+		System.out.println("Other Signature:" + otherSign);
+		
+		//BigInteger s = r.modInverse(n).multiply(signature).mod(n);
+		//BigInteger s = signature.multiply(r.modInverse(n));
+		//s=s.mod(n);
+		//System.out.println("teste:" + s);
+		System.out.println("other teste:" + r.modInverse(n).multiply(otherSign).mod(n));
+		/*blindValue =(r.pow(e.intValue()).multiply(msg));
+		blindValue.mod(n);
 		System.out.println("blindValue:" + blindValue);
-		
 		signature=blindValue.modPow(d, n);
 		System.out.println("Signature:" + signature);
 		
+		System.out.println("valor:" + (signature.multiply(r.modInverse(n))).mod(n));*/
 		
-		//BigInteger s = r.modInverse(n).multiply(signature).mod(n);
-		BigInteger s = signature.multiply(r.modInverse(n));
-		s=s.mod(n);
-		System.out.println("teste:" + s);
-		
-		System.out.println("mod pow:" + msg.modPow(e, n));
+		System.out.println("mod pow:" + msg.modPow(d, n));
 
 	}
 	
@@ -304,7 +323,7 @@ public class RSATestSuite {
 		
 		testSuite.blindTest(8, new BigInteger("30"));
 		
-		while(true){
+		/*while(true){
 			
 			System.out.println(user_info);
 			in = reader.nextInt();
@@ -345,7 +364,7 @@ public class RSATestSuite {
 				break;
 			}
 		
-		}
+		}*/
 	
 	}
 	

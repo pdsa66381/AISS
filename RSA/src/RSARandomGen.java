@@ -41,6 +41,7 @@ public class RSARandomGen {
 	
 		this.publicKey = e;
 		this.privateKey = this.publicKey.modInverse(phiN);
+		
 	}
 	
 	public BigInteger getPublicKey(){
@@ -71,4 +72,6 @@ public class RSARandomGen {
 	public BigInteger getPrivateKey(){
 		return this.privateKey;
 	}
+	
+
 }

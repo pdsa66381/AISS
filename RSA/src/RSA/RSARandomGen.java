@@ -38,10 +38,11 @@ public class RSARandomGen {
 		//A random e exponent is calculated such that 
 		do{
 			e = new RSABigInteger(size, new Random());
-		}while(e.compareTo(phiN)!=1 || e.gcd(phiN).compareTo(BigInteger.ONE)!=0);
+		}while(phiN.compareTo(e)!=1 || e.gcd(phiN).compareTo(BigInteger.ONE)!=0);
 	
 		this.publicKey = e;
 		this.privateKey = this.publicKey.modInverse(phiN);
+
 	}
 	
 	public BigInteger getPublicKey(){
@@ -71,5 +72,23 @@ public class RSARandomGen {
 
 	public BigInteger getPrivateKey(){
 		return this.privateKey;
+	}
+
+	public BigInteger generateOtherPrivateKey(int size, BigInteger msg){
+		//A random e exponent is calculated such that
+		BigInteger d;
+		d = new RSABigInteger(size, new Random());
+		while(true){
+			BigInteger value = msg.modPow(this.publicKey.multiply(d), this.modulus);
+			BigInteger msgValue = msg.mod(this.modulus);
+			
+			if(((value.compareTo(msgValue))==0) && 
+					(d.gcd(this.publicKey).intValue()==1))
+				break;
+			else d = new RSABigInteger(size, new Random());
+		}
+		
+					
+		return d;
 	}
 }
