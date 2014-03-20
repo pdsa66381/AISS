@@ -83,7 +83,13 @@ public class RSATestSuite {
 		results[2]=sum/battery_size;
 		
 		//SquarePower with BlindingOn
-		results[3]=0;
+		RSABigInteger blindingSquare;
+		for(i=0, sum=0; i < battery_size; i++){
+			blindingSquare = new RSABigInteger(inputPop[i].toString());
+			blindingSquare.modifyPowerStategy(new SquarePow());
+			sum+=performUnitTest(rsa, blindingSquare);
+		}
+		results[3]=sum/battery_size;;
 		
 		return results;
 	}
@@ -230,7 +236,7 @@ public class RSATestSuite {
 		double[] results;
 		double[] percentiles = {0, 0.2, 0.4, 0.5, 0.6, 0.75, 1.0};
 		
-		output += "Performing test2 with battery of "+sample_size+" samples...\n";
+		output += "Performing test3 with battery of "+sample_size+" samples...\n";
 		output += "[PublicKey]: \t"+rsa.getPublicKey()+" of size "+rsa.getPublicKey().bitLength()+"bits\n";
 		
 		for(int i=0; i < percentiles.length; i++){
@@ -254,54 +260,27 @@ public class RSATestSuite {
 		keys.RSAGen(size);
 		BigInteger n = keys.getModulus();
 		BigInteger e = keys.getPublicKey(); //public key
-		BigInteger d = keys.getPrivateKey(); //private key
-		//BigInteger d = keys.getMultiInverse();
-		//SecureRandom random = new SecureRandom();
-		BigInteger r;// =  BigInteger.probablePrime(size, random);
+		BigInteger d; //private key
+		BigInteger r;
 		BigInteger blindValue;
 		BigInteger signature;
-		
-		//A random e exponent is calculated such that 
-				do{
-					r = new RSABigInteger(size, new Random());
-				}while((n.compareTo(r)!=1) || (r.gcd(n).compareTo(BigInteger.ONE)!=0));
-		
+
+		//A random r exponent is calculated such that 
+		do{
+			r = new RSABigInteger(size, new Random());
+			}while((n.compareTo(r)!=1) || (r.gcd(n).compareTo(BigInteger.ONE)!=0));
 		
 		d=keys.generateOtherPrivateKey(size, r);
-		/*System.out.println("e:" + e);
-		System.out.println("r:" + r);
-		System.out.println("gcd:" + r.gcd(n));
-		System.out.println("d:" + d);
-		System.out.println("n:" + n);*/
 		System.out.println("testar: " + r.modPow(e.multiply(d), n));
-		//System.out.println("testar: " + msg.modPow(e.multiply(d), n));
 		System.out.println("msg: " + r.mod(n));
 		
-		//blindValue = r.modPow(e, n);
-		//blindValue =msg.multiply(blindValue);
-		//System.out.println("blindValue:" + blindValue);
-		BigInteger otherBlind = (r.pow(e.intValue())).multiply(msg);
-		System.out.println("other blindValue:" + otherBlind);
-		
-		//signature=blindValue.modPow(d, n);
-		//System.out.println("Signature:" + signature);
-		
-		BigInteger otherSign = otherBlind.modPow(d, n);
-		System.out.println("Other Signature:" + otherSign);
-		
-		//BigInteger s = r.modInverse(n).multiply(signature).mod(n);
-		//BigInteger s = signature.multiply(r.modInverse(n));
-		//s=s.mod(n);
-		//System.out.println("teste:" + s);
-		System.out.println("other teste:" + r.modInverse(n).multiply(otherSign).mod(n));
-		/*blindValue =(r.pow(e.intValue()).multiply(msg));
-		blindValue.mod(n);
+		blindValue = (r.pow(e.intValue())).multiply(msg);
 		System.out.println("blindValue:" + blindValue);
-		signature=blindValue.modPow(d, n);
+		
+		signature = blindValue.modPow(d, n);
 		System.out.println("Signature:" + signature);
 		
-		System.out.println("valor:" + (signature.multiply(r.modInverse(n))).mod(n));*/
-		
+		System.out.println("Blind RSA:" + r.modInverse(n).multiply(signature).mod(n));
 		System.out.println("mod pow:" + msg.modPow(d, n));
 
 	}
@@ -321,7 +300,7 @@ public class RSATestSuite {
 		user_info += "[3] Perform test 3 - Test with a fixed key, inputs with different percentages of set bits.\n";
 		user_info += "[0] Exit";
 		
-		testSuite.blindTest(8, new BigInteger("30"));
+		testSuite.blindTest(8, new BigInteger("8"));
 		
 		/*while(true){
 			
