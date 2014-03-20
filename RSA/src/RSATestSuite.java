@@ -268,14 +268,15 @@ public class RSATestSuite {
 				}while((n.compareTo(r)!=1) || (r.gcd(n).compareTo(BigInteger.ONE)!=0));
 		
 		
-		d=keys.generateOtherPrivateKey(size, msg);
+		d=keys.generateOtherPrivateKey(size, r);
 		/*System.out.println("e:" + e);
 		System.out.println("r:" + r);
 		System.out.println("gcd:" + r.gcd(n));
 		System.out.println("d:" + d);
 		System.out.println("n:" + n);*/
-		System.out.println("testar: " + msg.modPow(e.multiply(d), n));
-		System.out.println("msg: " + msg.mod(n));
+		System.out.println("testar: " + r.modPow(e.multiply(d), n));
+		//System.out.println("testar: " + msg.modPow(e.multiply(d), n));
+		System.out.println("msg: " + r.mod(n));
 		
 		//blindValue = r.modPow(e, n);
 		//blindValue =msg.multiply(blindValue);
