@@ -1,6 +1,8 @@
 package RSA;
 import java.math.BigInteger;
 
+import RSABigInteger.SquareBigInteger;
+
 public class RSA {
 	
 	private final RSARandomGen rsaRand;
@@ -53,13 +55,16 @@ public class RSA {
 		BigInteger e = this.rsaRand.getPublicKey();
 		BigInteger d = this.rsaRand.getPrivateKey();
 		BigInteger n = this.rsaRand.getModulus();
+		SquareBigInteger r, b;
 		
 		//Bling message
 		BigInteger blindingFactor = this.rsaRand.generateBlindingFactor();
-		BigInteger blind = plaintext.multiply(blindingFactor.modPow(e, n));
+		r = new SquareBigInteger(blindingFactor.toByteArray());
+		BigInteger blind = plaintext.multiply(r.modPow(e, n));
 		
 		//Encrypt Blinded Message
-		return blind.modPow(d, n);
+		b = new SquareBigInteger(blind.toByteArray());
+		return b.modPow(d, n);
 	}
 
 	private BigInteger unblindDecrypt(BigInteger ciphertext){
@@ -70,8 +75,10 @@ public class RSA {
 
 		//Unblind
         BigInteger unblind = r.modInverse(n).multiply(ciphertext).mod(n);
-		
-        return unblind.modPow(e, n);
+		SquareBigInteger ub = new SquareBigInteger(unblind.toByteArray());
+        
+        
+        return ub.modPow(e, n);
 	}
 	
 	public String printRSA(){
@@ -85,6 +92,5 @@ public class RSA {
 	public void setBlinding(){
 		blind = !blind;
 	}
-	
 }
 

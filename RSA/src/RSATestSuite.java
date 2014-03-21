@@ -5,7 +5,7 @@ import java.util.Scanner;
 import utils.NanoStopWatch;
 import utils.ResultsWriter;
 import RSA.RSA;
-import RSABigInteger.IterativeBigInteger;
+//import RSABigInteger.IterativeBigInteger; //TODO
 import RSABigInteger.SquareBigInteger;
 
 public class RSATestSuite {
@@ -86,6 +86,7 @@ public class RSATestSuite {
 		results[0]=sum/battery_size;
 		
 		//Iterative Power
+		/*
 		if(debug_lvl>=2)
 			System.out.println("\t Testing for IterativeBigInteger...");
 		
@@ -95,6 +96,7 @@ public class RSATestSuite {
 			sum+=performUnitTest(rsa, iterative);
 		}
 		results[1]=sum/battery_size;
+		*/
 		
 		//Square Power
 		if(debug_lvl>=2)
@@ -160,13 +162,13 @@ public class RSATestSuite {
 		
 		
 		//Adjust inputs to type
-		IterativeBigInteger iterative = new IterativeBigInteger(standard.toString());
+		//IterativeBigInteger iterative = new IterativeBigInteger(standard.toString()); //TODO 
 		SquareBigInteger squarepow = new SquareBigInteger(standard.toString(2));
 		SquareBigInteger blinding 	= new SquareBigInteger(standard.toString(2));
 		
 		//Test for each version
 		results[0] = performUnitTest(rsa, standard);
-		results[1] = performUnitTest(rsa, iterative);
+		//results[1] = performUnitTest(rsa, iterative); //TODO
 		results[2] = performUnitTest(rsa, squarepow);
 		
 		rsa.setBlinding();
@@ -202,7 +204,7 @@ public class RSATestSuite {
 			output += ""+i+") Testing all versions with fixed with inputs of size "+two.pow(exp).toString()+"\n";
 			results = performTestBatteryFixedKey(rsa, two.pow(exp).intValue(), battery_size);
 			output += "Standard: \t"	+results[0]	+"\t ns\n";
-			output += "Iterative: \t"	+results[1]	+"\t ns\n";
+			//output += "Iterative: \t"	+results[1]	+"\t ns\n"; //TODO
 			output += "Square Power: \t"+results[2]	+"\t ns\n";
 			output += "RSA Blinding: \t"+results[3]	+"\t ns\n";
 			output += "----------------------------------\n\n";
@@ -232,7 +234,7 @@ public class RSATestSuite {
 		output += "[Input]: \t"+input.toString()+ "of size" + input.bitLength()+"\n";
 		
 		//
-		IterativeBigInteger iterative = new IterativeBigInteger(input.toString());
+		//IterativeBigInteger iterative = new IterativeBigInteger(input.toString()); //TODO
 		SquareBigInteger squarepow = new SquareBigInteger(input.toString());
 		SquareBigInteger blinding 	= new SquareBigInteger(input.toString());
 		
@@ -252,9 +254,11 @@ public class RSATestSuite {
 				System.out.println("Testing for standard BigInteger...");
 			results[0] = performUnitTest(rsa, input);
 			
+			/* TODO
 			if(debug_lvl>=1)
 				System.out.println("Testing for standard IterativeBigInteger...");
 			results[1] = performUnitTest(rsa, iterative);
+			*/
 			
 			if(debug_lvl>=1)
 				System.out.println("Testing for standard SquareBigInteger...");
@@ -268,7 +272,7 @@ public class RSATestSuite {
 			
 			
 			output += "Standard: \t"	+results[0]	+"\t ns\n";
-			output += "Iterative: \t"	+results[1]	+"\t ns\n";
+			//output += "Iterative: \t"	+results[1]	+"\t ns\n"; //TODO
 			output += "Square Power: \t"+results[2]	+"\t ns\n";
 			output += "RSA Blinding: \t"+results[3]	+"\t ns\n";
 			output += "----------------------------------\n\n";
@@ -306,7 +310,7 @@ public class RSATestSuite {
 			
 			output += "Testing all versions with "+percentiles[i]*100+"% active bits\n";
 			output += "Standard: \t"	+results[0]	+"\t ns\n";
-			output += "Iterative: \t"	+results[1]	+"\t ns\n";
+			//output += "Iterative: \t"	+results[1]	+"\t ns\n"; //TODO
 			output += "Square Power: \t"+results[2]	+"\t ns\n";
 			output += "RSA Blinding: \t"+results[3]	+"\t ns\n";
 			output += "----------------------------------\n\n";
@@ -331,14 +335,14 @@ public class RSATestSuite {
 		String filename;
 		String user_info = "";
 		
-		user_info += "[1] Perform test 1 - Test with a fixed key, inputs with different size (32bits to 1024)\n";
+		user_info += "\n\n[1] Perform test 1 - Test with a fixed key, inputs with different size (32bits to 1024)\n";
 		user_info += "[2] Perform test 2 - Test with a fixed input, different sized keys\n";
 		user_info += "[3] Perform test 3 - Test with a fixed key, inputs with different percentages of set bits.\n";
 		user_info += "[4] Change default sample size\n";
 		user_info += "[5] Change verbose level\n";
 		user_info += "[0] Exit";
 		
-		
+		System.out.println("NOTE: This version will ignore the iterative implementation of modPow.\n");
 		
 		while(true){
 			
