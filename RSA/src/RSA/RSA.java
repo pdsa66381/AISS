@@ -49,6 +49,8 @@ public class RSA {
 	
 	private BigInteger blindEncrypt(BigInteger plaintext){
 		
+		System.out.println("Using rsa Blinding...");
+		
 		BigInteger e = this.rsaRand.getPublicKey();
 		BigInteger d = this.rsaRand.getPrivateKey();
 		BigInteger n = this.rsaRand.getModulus();
