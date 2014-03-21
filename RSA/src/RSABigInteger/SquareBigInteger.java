@@ -33,6 +33,5 @@ public class SquareBigInteger extends BigInteger{
 		}
 		
 		return new SquareBigInteger(y.toByteArray());
-
 	}
 }
