@@ -5,7 +5,6 @@ import java.util.Scanner;
 import utils.NanoStopWatch;
 import utils.ResultsWriter;
 import RSA.RSA;
-import RSA.RSARandomGen;
 import RSABigInteger.RSABigInteger;
 import RSABigInteger.SquarePow;
 
@@ -253,42 +252,10 @@ public class RSATestSuite {
 	}
 	
 
-	
-	public void blindTest(int size, BigInteger msg){
 		
-		RSARandomGen keys = new RSARandomGen();
-		keys.RSAGen(size);
-		BigInteger n = keys.getModulus();
-		BigInteger e = keys.getPublicKey(); //public key
-		BigInteger d; //private key
-		BigInteger r;
-		BigInteger blindValue;
-		BigInteger signature;
-
-		//A random r exponent is calculated such that 
-		do{
-			r = new RSABigInteger(size, new Random());
-			}while((n.compareTo(r)!=1) || (r.gcd(n).compareTo(BigInteger.ONE)!=0));
-		
-		d=keys.generateOtherPrivateKey(size, r);
-		System.out.println("testar: " + r.modPow(e.multiply(d), n));
-		System.out.println("msg: " + r.mod(n));
-		
-		blindValue = (r.pow(e.intValue())).multiply(msg);
-		System.out.println("blindValue:" + blindValue);
-		
-		signature = blindValue.modPow(d, n);
-		System.out.println("Signature:" + signature);
-		
-		System.out.println("Blind RSA:" + r.modInverse(n).multiply(signature).mod(n));
-		System.out.println("mod pow:" + msg.modPow(d, n));
-
-	}
-	
 	public static void main(String[] args){
 		
 		RSATestSuite testSuite = new RSATestSuite(1);
-		RSA rsa = new RSA(8);
 		
 		Scanner reader = new Scanner(System.in);
 		int in, key_size, input_size, battery_size;
@@ -300,15 +267,15 @@ public class RSATestSuite {
 		user_info += "[3] Perform test 3 - Test with a fixed key, inputs with different percentages of set bits.\n";
 		user_info += "[0] Exit";
 		
-		testSuite.blindTest(8, new BigInteger("8"));
 		
-		/*while(true){
+		while(true){
 			
 			System.out.println(user_info);
 			in = reader.nextInt();
 			
 			switch (in) {
 			case 0:
+				reader.close();
 				return;
 			case 1:
 				System.out.println("Key size (bits):");
@@ -343,7 +310,7 @@ public class RSATestSuite {
 				break;
 			}
 		
-		}*/
+		}
 	
 	}
 	

@@ -7,19 +7,25 @@ import RSABigInteger.RSABigInteger;
 
 public class RSARandomGen {
 	
+	private final BigInteger one = BigInteger.ONE;
 	private final SecureRandom random = new SecureRandom();
 	
-	private BigInteger privateKey;
-	private BigInteger publicKey;
-	private BigInteger modulus;
+	private final int size;
+	private final BigInteger privateKey;
+	private final BigInteger publicKey;
+	private final BigInteger modulus;
+
+	private BigInteger blindingFactor;
 	
 	/**
 	 * Randomly generates an exponent with a given size.
 	 * @param size the size of the exponent
 	 * @return the exponent which is an RSABigInteger
 	 */
-	public void RSAGen(int size){
+	public RSARandomGen(int size){
 
+		this.size = size;
+		
 		BigInteger 	p, q, phiN;
 		RSABigInteger e;
 		
@@ -43,6 +49,30 @@ public class RSARandomGen {
 		this.publicKey = e;
 		this.privateKey = this.publicKey.modInverse(phiN);
 
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public BigInteger generateBlindingFactor(){
+		
+		BigInteger r, gcd;
+		
+		do {
+            r = new BigInteger(size/2, random);
+            gcd = r.gcd(this.modulus);
+            	
+        }
+        while(!gcd.equals(one) || r.compareTo(modulus)>=0);
+		
+		this.blindingFactor = r;
+		
+		return r;
+	}
+	
+	public BigInteger getBlindingFactor(){
+		return this.blindingFactor;
 	}
 	
 	public BigInteger getPublicKey(){
