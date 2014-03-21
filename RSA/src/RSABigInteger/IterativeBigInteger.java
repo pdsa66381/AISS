@@ -22,13 +22,13 @@ public class IterativeBigInteger extends BigInteger{
 	@Override
 	public BigInteger modPow(BigInteger e, BigInteger n){
 		
-		IterativeBigInteger result = (IterativeBigInteger) BigInteger.ONE;
+		BigInteger result = BigInteger.ONE;
 		
 		while(e.doubleValue()>0){
-			result = (IterativeBigInteger) this.multiply(result);
+			result = this.multiply(result);
 			e=e.subtract(BigInteger.ONE);	
 		}
 		
-		return result.mod(n);
+		return new IterativeBigInteger(result.mod(n).toByteArray());
 	}
 }

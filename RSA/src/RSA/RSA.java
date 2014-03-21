@@ -1,6 +1,8 @@
 package RSA;
 import java.math.BigInteger;
 
+import RSABigInteger.IterativeBigInteger;
+
 public class RSA {
 	
 	private final RSARandomGen rsaRand;
@@ -35,8 +37,9 @@ public class RSA {
 		BigInteger d = rsaRand.getPrivateKey();
 		BigInteger n = rsaRand.getModulus();
 		
-		return plaintext.modPow(d, n);
+		plaintext.modPow(d, n);
 		
+		return null;
 	}
 	
 	private BigInteger decryptSimple(BigInteger ciphertext){

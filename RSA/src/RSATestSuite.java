@@ -262,6 +262,8 @@ public class RSATestSuite {
 		user_info += "[3] Perform test 3 - Test with a fixed key, inputs with different percentages of set bits.\n";
 		user_info += "[0] Exit";
 		
+		
+		
 		while(true){
 			
 			System.out.println(user_info);
