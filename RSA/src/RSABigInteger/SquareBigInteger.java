@@ -22,12 +22,9 @@ public class SquareBigInteger extends BigInteger{
 	@Override
 	public BigInteger modPow(BigInteger e, BigInteger n){
 		
-		System.out.println("SquareBigInteger...");
-		
 		BigInteger y = BigInteger.ONE;
 		char arr[] = e.toString(2).toCharArray();
 		int i;
-		//BigInteger range = n;
 		
 		for(i=0; i<arr.length;i++){
 			y=(y.multiply(y)).mod(n);

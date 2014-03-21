@@ -1,8 +1,6 @@
 package RSA;
 import java.math.BigInteger;
 
-import RSABigInteger.IterativeBigInteger;
-
 public class RSA {
 	
 	private final RSARandomGen rsaRand;
@@ -51,8 +49,6 @@ public class RSA {
 	}
 	
 	private BigInteger blindEncrypt(BigInteger plaintext){
-		
-		System.out.println("Using rsa Blinding...");
 		
 		BigInteger e = this.rsaRand.getPublicKey();
 		BigInteger d = this.rsaRand.getPrivateKey();

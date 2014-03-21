@@ -11,6 +11,7 @@ import RSABigInteger.SquareBigInteger;
 public class RSATestSuite {
 	
 	private int sample_size = 1;
+	private int debug_lvl = 3;
 	
 	public RSATestSuite(int sampling_size){
 		this.sample_size = sampling_size;
@@ -36,11 +37,28 @@ public class RSATestSuite {
 		double sum=0;
 		NanoStopWatch timer = new NanoStopWatch();
 		
+		if(debug_lvl >= 3)
+			System.out.print("\t\t[...");
+		
 		for(i=0; i < this.sample_size; i++){
 			timer.startClock();
 			rsa.encrypt(input);
 			sum+=timer.stopClock();
+			
+			if(debug_lvl>=3){
+				if(i == sample_size/4)
+					System.out.print("...25%...");
+				
+				if(i == sample_size/2)
+					System.out.print("...50%...");
+				
+				if(i==3*sample_size/4)
+					System.out.print("...75%...");
+			}
 		}
+		
+		if(debug_lvl>=3)
+			System.out.println("...]");
 		
 		return sum/this.sample_size;
 	}
@@ -59,12 +77,18 @@ public class RSATestSuite {
 			inputPop[i] = new BigInteger(input_size, rand);
 		
 		//Standard
+		if(debug_lvl>=2)
+			System.out.println("\t Testing for BigInteger...");
+		
 		for(i=0; i < battery_size; i++){
 			sum+=performUnitTest(rsa, inputPop[i]);
 		}
 		results[0]=sum/battery_size;
 		
 		//Iterative Power
+		if(debug_lvl>=2)
+			System.out.println("\t Testing for IterativeBigInteger...");
+		
 		IterativeBigInteger iterative;
 		for(i=0, sum=0; i < battery_size; i++){
 			iterative = new IterativeBigInteger(inputPop[i].toString());
@@ -73,6 +97,9 @@ public class RSATestSuite {
 		results[1]=sum/battery_size;
 		
 		//Square Power
+		if(debug_lvl>=2)
+			System.out.println("\t Testing for SquareBigInteger...");
+		
 		SquareBigInteger square;
 		for(i=0, sum=0; i < battery_size; i++){
 			square = new SquareBigInteger(inputPop[i].toString());
@@ -81,6 +108,9 @@ public class RSATestSuite {
 		results[2]=sum/battery_size;
 		
 		//SquarePower with BlindingOn
+		if(debug_lvl>=2)
+			System.out.println("\t Testing for RSA Blinding...");
+		
 		SquareBigInteger blindingSquare;
 		rsa.setBlinding();
 		for(i=0, sum=0; i < battery_size; i++){
@@ -122,9 +152,11 @@ public class RSATestSuite {
 			}
 		}
 		
-		System.err.println("Percentile Required: "+percentile*100+"%");
-		System.err.println("Enabled bits required: "+bitCount+" obtained "+standard.bitCount());
-		System.err.println("Required size: "+input_size+" obtained "+standard.bitLength()+"\n");
+		if(debug_lvl>=2){
+			System.out.println("Percentile Required: "+percentile*100+"%");
+			System.out.println("Enabled bits required: "+bitCount+" obtained "+standard.bitCount());
+			System.out.println("Required size: "+input_size+" obtained "+standard.bitLength()+"\n");
+		}
 		
 		
 		//Adjust inputs to type
@@ -162,6 +194,11 @@ public class RSATestSuite {
 		output += "[PublicKey]: \t"+rsa.getPublicKey()+" of size "+rsa.getPublicKey().bitLength()+"bits\n";
 		
 		for(i=0, exp=5; exp <= 10; exp++, i++){
+			
+			if(debug_lvl >= 1)
+				System.out.println(""+i+") Testing all versions with fixed with inputs of size "
+						+two.pow(exp).toString()+"\n");
+			
 			output += ""+i+") Testing all versions with fixed with inputs of size "+two.pow(exp).toString()+"\n";
 			results = performTestBatteryFixedKey(rsa, two.pow(exp).intValue(), battery_size);
 			output += "Standard: \t"	+results[0]	+"\t ns\n";
@@ -169,6 +206,9 @@ public class RSATestSuite {
 			output += "Square Power: \t"+results[2]	+"\t ns\n";
 			output += "RSA Blinding: \t"+results[3]	+"\t ns\n";
 			output += "----------------------------------\n\n";
+			
+			if(debug_lvl>=1)
+				System.out.println("----------------------------------\n\n");
 		}
 
 		ResultsWriter.printResultsToFile(file_title, output);
@@ -182,9 +222,10 @@ public class RSATestSuite {
 	 */
 	public void performTest2(BigInteger input, String file_title){
 		
-		int i, size;
+		int i, exp;
 		RSA rsa;
 		double[] results = new double[4];
+		BigInteger two = new BigInteger("2");
 		
 		String output = "";
 		output += "Performing test2 with battery of "+this.sample_size+" samples...\n";
@@ -195,22 +236,46 @@ public class RSATestSuite {
 		SquareBigInteger squarepow = new SquareBigInteger(input.toString());
 		SquareBigInteger blinding 	= new SquareBigInteger(input.toString());
 		
-		for(i=0, size=0; size<= 32; size+=size, i++){
+		for(i=0, exp=2; exp<=5; exp++, i++){
+			
+			int size = two.pow(exp).intValue();
 			rsa = new RSA(size);
+			
+			if(debug_lvl>=1)
+				System.out.println(""+i+") Testing all versions with key "+rsa.getPublicKey()
+					+" of size "+rsa.getPublicKey().bitLength()+" out of "+size);
+			
 			output += ""+i+") Testing all versions with key"+rsa.getPublicKey();
 			output += " of size"+rsa.getPublicKey().bitLength()+"\n";
-			System.err.println(rsa.getPublicKey().bitLength());
+			
+			if(debug_lvl>=1)
+				System.out.println("Testing for standard BigInteger...");
 			results[0] = performUnitTest(rsa, input);
+			
+			if(debug_lvl>=1)
+				System.out.println("Testing for standard IterativeBigInteger...");
 			results[1] = performUnitTest(rsa, iterative);
+			
+			if(debug_lvl>=1)
+				System.out.println("Testing for standard SquareBigInteger...");
 			results[2] = performUnitTest(rsa, squarepow);
+			
 			rsa.setBlinding();
+			if(debug_lvl>=1)
+				System.out.println("Testing for standard SquareBigInteger with RSABlinding...");
 			results[3] = performUnitTest(rsa, blinding);
 			rsa.setBlinding();
+			
+			
 			output += "Standard: \t"	+results[0]	+"\t ns\n";
 			output += "Iterative: \t"	+results[1]	+"\t ns\n";
 			output += "Square Power: \t"+results[2]	+"\t ns\n";
 			output += "RSA Blinding: \t"+results[3]	+"\t ns\n";
 			output += "----------------------------------\n\n";
+			
+			if(debug_lvl>=1)
+				System.out.println("----------------------------------\n\n");
+			
 		}
 		
 		ResultsWriter.printResultsToFile(file_title, output);
@@ -235,22 +300,31 @@ public class RSATestSuite {
 		
 		for(int i=0; i < percentiles.length; i++){
 			results = performTestUnitByPercentage(rsa, input_bit_size, percentiles[i]);
+			
+			if(debug_lvl>=1)
+				System.out.println("Testing all versions with "+percentiles[i]*100+"% active bits\n");
+			
 			output += "Testing all versions with "+percentiles[i]*100+"% active bits\n";
 			output += "Standard: \t"	+results[0]	+"\t ns\n";
 			output += "Iterative: \t"	+results[1]	+"\t ns\n";
 			output += "Square Power: \t"+results[2]	+"\t ns\n";
 			output += "RSA Blinding: \t"+results[3]	+"\t ns\n";
 			output += "----------------------------------\n\n";
+			
+			if(debug_lvl>=1)
+				System.out.println("----------------------------------\n\n");
 		}
 		
 		ResultsWriter.printResultsToFile(file_title, output);
 	}
 	
-
+	public void setDebugLevel(int lvl){
+		this.debug_lvl = lvl;
+	}
 		
 	public static void main(String[] args){
 		
-		RSATestSuite testSuite = new RSATestSuite(1);
+		RSATestSuite testSuite = new RSATestSuite(10);
 		
 		Scanner reader = new Scanner(System.in);
 		int in, key_size, input_size, battery_size;
@@ -260,6 +334,8 @@ public class RSATestSuite {
 		user_info += "[1] Perform test 1 - Test with a fixed key, inputs with different size (32bits to 1024)\n";
 		user_info += "[2] Perform test 2 - Test with a fixed input, different sized keys\n";
 		user_info += "[3] Perform test 3 - Test with a fixed key, inputs with different percentages of set bits.\n";
+		user_info += "[4] Change default sample size\n";
+		user_info += "[5] Change verbose level\n";
 		user_info += "[0] Exit";
 		
 		
@@ -304,6 +380,21 @@ public class RSATestSuite {
 				testSuite.setSamplingSize(battery_size);
 				testSuite.performTest3(new RSA(key_size), input_size, filename);
 				break;
+			case 4:
+				System.out.print("Set sample size to:");
+				battery_size = reader.nextInt();
+				testSuite.setSamplingSize(battery_size);
+				break;
+			case 5:
+				String debug_info="";
+				debug_info+="[0] No debugging info\n";
+				debug_info+="[1] Low debugging info\n";
+				debug_info+="[2] Average debugging info\n";
+				debug_info+="[3] High debugging info\n";
+				debug_info+="Set debugging info to:";
+				System.out.print(debug_info);
+				int lvl = reader.nextInt();
+				testSuite.setDebugLevel(lvl);
 			default:
 				break;
 			}
